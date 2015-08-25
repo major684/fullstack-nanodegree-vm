@@ -13,15 +13,40 @@ def connect():
 
 def deleteMatches():
     """Remove all the match records from the database."""
-
-
+	# Connect to database
+	conn = connect()
+	cur = conn.cursor()
+	# Truncate all records from matches table
+	cur.execute("TRUNCATE TABLE Matches;")
+	conn.commit()
+	# Close communication with the database
+	cur.close()
+	conn.close()
+	
 def deletePlayers():
     """Remove all the player records from the database."""
-
-
+	# Connect to database
+	conn = connect()
+	cur = conn.cursor()
+	# Truncate all records from Players table
+	cur.execute("TRUNCATE TABLE Players;")
+	conn.commit()
+	# Close communication with the database
+	cur.close()
+	conn.close()
+	
 def countPlayers():
     """Returns the number of players currently registered."""
-
+	# Connect to database
+	conn = connect()
+	cur = conn.cursor();
+	# Get number of players registered in players table
+	cur.execute("SELECT Count(*) FROM Players;")
+	results = cur.fetchall()
+	# Close communication with the database
+	cur.close()
+	conn.close()
+	return results
 
 def registerPlayer(name):
     """Adds a player to the tournament database.
@@ -32,7 +57,16 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
-
+	# Connect to database
+	conn = connect()
+	cur = conn.cursor()
+	# Insert data into table
+	cur.execute("INSERT INTO Players (Name) VALUES (%s)",
+				(name))
+	conn.commit()
+	# Close communication with the database
+	cur.close()
+	conn.close()
 
 def playerStandings():
     """Returns a list of the players and their win records, sorted by wins.
@@ -47,8 +81,16 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-
-
+	# Connect to database
+	conn = connect()
+	cur = conn.cursor()
+	cur.execute("SELECT ID, Name, Wins, Matches FROM Standings;")
+	results = cur.fetchall()
+	# Close communication with the database
+	cur.close()
+	conn.close()
+	return results
+	
 def reportMatch(winner, loser):
     """Records the outcome of a single match between two players.
 
@@ -56,7 +98,16 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
- 
+ 	# Connect to database
+	conn = connect()
+	cur = conn.cursor()
+	# Insert data into table
+	cur.execute("INSERT INTO Matches (Winner, Loser) VALUES (%s, %s)",
+				(winner, loser))
+	conn.commit()
+	# Close communication with the database
+	cur.close()
+	conn.close()
  
 def swissPairings():
     """Returns a list of pairs of players for the next round of a match.
@@ -73,5 +124,26 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
-
+	# Connect to database
+	conn = connect()
+	cur = conn.cursor()
+	cur.execute("SELECT ID, Name, Wins FROM Standings ORDER BY Wins ASC;")
+	results = cur.fetchall()
+	# Close communication with the database
+	cur.close()
+	conn.close()
+	# Initialize empty list
+	swiss = []
+	# Set counter to iterate through rows
+	i = 0
+	# Iterate through rows and set results to variable
+    while i < len(results):
+        playerAid = results[i][0]
+        playerAname = results[i][1]
+        playerBid = results[i+1][0]
+        playerBname = results[i+1][1]
+        swiss.append((playerAid,playerAname,playerBid,playerBname))
+	# Set counter to select next pair
+        i=i+2
+	return swiss
 
