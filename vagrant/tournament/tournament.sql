@@ -5,7 +5,10 @@
 --
 -- You can write comments in this file by starting them with two dashes, like
 -- these lines here.
-
+DROP DATABASE IF EXISTS tournament;
+DROP VIEW IF EXISTS Standings;
+DROP TABLE IF EXISTS Matches;
+DROP TABLE IF EXISTS Players;
 -- Create Database for tournament project
 
 CREATE DATABASE tournament;
@@ -29,22 +32,22 @@ CREATE TABLE Matches (
 CREATE VIEW Standings AS
 WITH Wins as(
  SELECT 
-		ID,
+		Players.ID,
 		Name,
-		COUNT(Winner) AS Wins,
+		COALESCE(COUNT(Winner), 0) AS Wins
 	FROM Players 
-	JOIN Matches 
+	LEFT JOIN Matches 
 	ON Players.ID = Matches.Winner
-	GROUP BY ID,Name
+	GROUP BY Players.ID,Name
   ), Losses AS (
  SELECT 
-		ID,
+		Players.ID,
 		Name,
-		COUNT(Loser) AS Losses,
+		COALESCE(COUNT(Looser),0) AS Losses
 	FROM Players 
-	JOIN Matches 
-	ON Players.ID = Matches.Loser
-	GROUP BY ID,Name
+	LEFT JOIN Matches 
+	ON Players.ID = Matches.Looser
+	GROUP BY Players.ID,Name
 	), Combined AS(
 	SELECT ID, Name, Wins, 0 AS Losses FROM Wins
 	UNION ALL
