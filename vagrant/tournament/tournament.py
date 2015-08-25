@@ -2,6 +2,9 @@
 #
 # tournament.py -- implementation of a Swiss-system tournament
 #
+# Project 2: Tournament Results
+# Author: Lucas Velasquez
+# Date: 8/24/2015
 
 import psycopg2
 
@@ -65,7 +68,7 @@ def registerPlayer(name):
     conn = connect()
     cur = conn.cursor()
     # Insert data into table
-    cur.execute("INSERT INTO Players (Name) VALUES (%s);",(name,))
+    cur.execute("INSERT INTO Players (Name) VALUES (%s);", (name,))
     conn.commit()
     # Close communication with the database
     cur.close()
@@ -150,5 +153,5 @@ def swissPairings():
         swiss.append((playerAid, playerAname, playerBid, playerBname))
         # Set counter to select next pair
         i = i + 2
-		
-    return swiss 
+
+    return swiss
