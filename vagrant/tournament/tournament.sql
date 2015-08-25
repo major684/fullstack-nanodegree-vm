@@ -10,34 +10,40 @@
 -- Date: 8/24/2015
 
 -- Scripts to check if database and database objects exists if so then drop them
+-- Simply dropping the database did not clear the database objects out
 DROP DATABASE IF EXISTS tournament;
-DROP VIEW IF EXISTS Standings;
+DROP View IF EXISTS Standings;
 DROP TABLE IF EXISTS Matches;
-DROP TABLE IF EXISTS Players;
+DROP TABLE IF EXISTS PLayers;
+
 -- Create Database for tournament project
 
 CREATE DATABASE tournament;
-
+\c tournament
 -- Create Tables needed for tracking tournament matches
 
 -- Players table will hold the data about registered players
 CREATE TABLE Players (
  ID serial PRIMARY KEY,
- Name varchar(50),
+ Name varchar(50) NOT NULL,
  Date_Created timestamp DEFAULT current_timestamp
 );
 
 --Matches table will hold information about matches played between players
 CREATE TABLE Matches (
  ID serial PRIMARY KEY,
- Winner integer references Players(ID),
- Looser integer references Players(ID),
+ Winner integer references Players(ID) ON DELETE CASCADE,
+ Looser integer references Players(ID) ON DELETE CASCADE,
  Match_Date timestamp DEFAULT current_timestamp
 );
 
 -- Create a view that shows current standings
 --I  used a CTE for the ease of building a nice final table without having to use
 -- Multiple views
+-- Note to Reviewer: I did not implement an order by on this because it will limit this view
+-- If we wanted to use this view to order by matches instead of wins putting an order by would
+-- limit that.  It is better to do the sorting in a query calling the view instead of putting
+-- it in the view. 
 CREATE VIEW Standings AS
 WITH Wins as(
  SELECT 
