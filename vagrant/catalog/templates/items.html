@@ -36,11 +36,12 @@
         <div class="container-fluid">
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 	 		<div class="panel-body">
-	 		<h2 class="page-header">{{categoryName}} <span class="badge">{{itemCount}}</span></h2>
-	 		<p class="btn btn-default"><a href="{{ url_for('newItem',category_name = categoryName) }}">New Item</a></p>
+	 		<h2 class="page-header">{{categoryName}}</h2>
 			{% for i in items %}
-			<h4>{{i.item_name}}</h4>
-			<p><a href="{{ url_for('viewItem',category_name = i.category_name, item_name = i.item_name) }}">View Item</a></p>
+			<h3>{{i.item_name}}</h3>
+			<h5>{{i.description}}</h5>
+			<p><a href="{{ url_for('editItem',category_name = i.category_name, item_name = i.item_name) }}">Edit</a></p>
+			<p><a href="{{ url_for('deleteItem',category_name = i.category_name, item_name = i.item_name) }}">Delete</a></p>
 		</br>
 			{% endfor %}
 			</div>

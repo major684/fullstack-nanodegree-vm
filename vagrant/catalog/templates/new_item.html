@@ -32,20 +32,37 @@
 			{% endfor %}
           </ul>
         </div>
-        <!-- Loop through all items for a category and show a count of items for category -->
+        <!-- Create Item Form -->
         <div class="container-fluid">
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-	 		<div class="panel-body">
-	 		<h2 class="page-header">{{categoryName}} <span class="badge">{{itemCount}}</span></h2>
-	 		<p class="btn btn-default"><a href="{{ url_for('newItem',category_name = categoryName) }}">New Item</a></p>
-			{% for i in items %}
-			<h4>{{i.item_name}}</h4>
-			<p><a href="{{ url_for('viewItem',category_name = i.category_name, item_name = i.item_name) }}">View Item</a></p>
-		</br>
-			{% endfor %}
-			</div>
+        	<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        	<h1>Create New Item</h1>
+        	<form class="form-horizontal" action="{{ url_for('newItem',category_name = categoryName) }}" method='post'>
+			  <div class="form-group">
+			    <label for="itemName" class="col-sm-2 control-label">Item Name</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" id="itemName" name="item_name" placeholder="Enter Item Name">
+			    </div>
+			  </div>
+			  <div class="form-group">
+			    <label for="inputDescription" class="col-sm-2 control-label">Description</label>
+			    <div class="col-sm-10">
+			      <textarea class="form-control" rows="4" id="inputDescription" name="description" placeholder="Enter Description"></textarea>
+			    </div>
+			  </div>
+			  <div class="form-group">
+			    <label for="categoryList" class="col-sm-2 control-label">Category</label>
+			    <div class="col-sm-10">
+			       <input type="text" class="form-control" id="categoryList" name="category_name" value="{{categoryName}}" readonly>
+			    </div>
+			  </div>
+			  <div class="form-group">
+			    <div class="col-sm-offset-2 col-sm-10">
+			      <button type="submit" class="btn btn-default">Create</button>
+			    </div>
+			  </div>
+			</form>
 		</div>
-	</div>
+		</div>
 	
 	
 	<body>
