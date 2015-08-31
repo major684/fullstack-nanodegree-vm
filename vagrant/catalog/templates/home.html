@@ -22,7 +22,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
-        	<h4>Categories</h4>
+        	<h3>Categories</h3>
           <ul class="nav nav-sidebar">
 			{% for c in categories %}
 			<li><a href="#">{{ c.category_name }}</a></li>
@@ -35,6 +35,7 @@
 			<h2 class="page-header">Latest Items</h2>
 			{% for i in items %}
 			<h4>{{i.item_name}}  <span class="label label-primary">{{i.category_name}}</span></h4>
+			<p><a href="{{ url_for('categoryItems',category_name = i.category_name) }}">EDIT</a></p>
 		</br>
 			{% endfor %}
 			</div>

@@ -15,8 +15,9 @@ engine = create_engine('sqlite:///catalog.db')
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
-
+# Home View Route
 @app.route('/')
+@app.route('/home')
 def homePage():
     categories = session.query(Categories).all()
     items = session.query(Items).join(Categories, Items.category_id == Categories.id) \
@@ -34,6 +35,7 @@ def categoryItems(category_name):
     	output += i.item_name
     	output += '</br>'
     return output
+
 if __name__ == '__main__':
     app.debug = True
     app.run(host = '0.0.0.0', port = 5000)
