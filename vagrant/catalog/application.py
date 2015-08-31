@@ -28,13 +28,16 @@ def homePage():
 # Categories Route
 @app.route('/catalog/<string:category_name>/items/')
 def categoryItems(category_name):
-    categories = session.query(Categories).filter_by(category_name = category_name).one()
-    items = session.query(Items).filter_by(category_id = categories.id)
-    output = ''
-    for i in items:
-    	output += i.item_name
-    	output += '</br>'
-    return output
+    categories = session.query(Categories).all()
+    items = session.query(Items).join(Categories, Items.category_id == Categories.id) \
+    							.filter(Categories.category_name == category_name) \
+    							.values(Items.item_name, Categories.category_name)
+    count = session.query(Items).join(Categories, Items.category_id == Categories.id) \
+    							.filter(Categories.category_name == category_name) \
+    							.count()
+    
+    return render_template('categories.html', categories = categories, items = items, itemCount = count, \
+    					    categoryName = category_name)
 
 if __name__ == '__main__':
     app.debug = True
