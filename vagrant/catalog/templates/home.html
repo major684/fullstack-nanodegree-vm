@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	    <meta charset="utf-8">
+	    <title>Catalog</title>
+
+	    <!-- Bootstrap 3 -->
+	    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+	    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
+	    <!-- Custom styles for this template -->
+   		<link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/dashboard.css') }}">
+	    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+	    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+  		<div class="container">
+  		  	 <a class="navbar-brand" href="#">Catalog App</a>
+  		  	<button type="button" class="btn btn-default navbar-btn navbar-right">Sign in</button>
+  		</div>
+	</nav>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+        	<h4>Categories</h4>
+          <ul class="nav nav-sidebar">
+			{% for c in categories %}
+			<li><a href="#">{{ c.category_name }}</a></li>
+			{% endfor %}
+          </ul>
+        </div>
+        <div class="container-fluid">
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+	 		<div class="panel-body">
+			<h2 class="page-header">Latest Items</h2>
+			{% for i in items %}
+			<h4>{{i.item_name}}  <span class="label label-primary">{{i.category_name}}</span></h4>
+		</br>
+			{% endfor %}
+			</div>
+		</div>
+	</div>
+	
+	
+	<body>
+
+</html>
