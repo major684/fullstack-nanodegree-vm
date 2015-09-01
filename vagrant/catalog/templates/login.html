@@ -68,7 +68,7 @@ function signInCallback(authResult) {
       success: function(result) {
         // Handle or verify the server response if necessary.
         if (result) {
-          $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
+          $('#result').html('Login Successful!</br>'+ result + '</br><h4>Redirecting...</h4>')
          setTimeout(function() {
           window.location.href = "/home";
          }, 4000);
