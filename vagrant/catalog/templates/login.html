@@ -24,18 +24,35 @@
           <button type="button" class="btn btn-default navbar-btn navbar-right">Sign in</button>
       </div>
   </nav>
-      <div id="signinButton">
-          <span class="g-signin btn"
-            data-scope="openid email"
-            data-clientid="691062735424-l18brm156de4mh085ji5g6c1if3r8dlo.apps.googleusercontent.com"
-            data-redirecturi="postmessage"
-            data-accesstype="offline"
-            data-cookiepolicy="single_host_origin"
-            data-callback="signInCallback"
-            data-approvalprompt="force">
-            </span>
-      </div>
-      <div id="result"></div>
+      <div class='container'>
+        <div class="panel panel-default">
+          <div class="panel-body">
+        <!-- Beginning of Result div -->
+              <div class="text-center" id="result">
+                  <h2>Please Sign in</h2>
+                    <div class="panel panel-primary">
+                       <div class="panel-heading">
+                            <h3 class="panel-title">Google+</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div id="signinButton">
+                          <span class="g-signin btn btn-lg"
+                              data-scope="openid email"
+                              data-clientid="691062735424-l18brm156de4mh085ji5g6c1if3r8dlo.apps.googleusercontent.com"
+                              data-redirecturi="postmessage"
+                              data-accesstype="offline"
+                              data-cookiepolicy="single_host_origin"
+                              data-callback="signInCallback"
+                              data-approvalprompt="force">
+                          </span>
+                            </div>
+                        </div>
+                    </div>
+        <!-- End Of result div -->
+              </div>
+        </div>
+        </div>
+    </div>
 <script>
 function signInCallback(authResult) {
   if (authResult['code']) {

@@ -18,6 +18,7 @@ from flask import make_response
 
 CLIENT_ID = json.loads(
 	open('client_secrets.json', 'r').read())['web']['client_id']
+APPLICATION_NAME = "Catalog Application"
 # Import DB
 from sqlalchemy import create_engine, and_
 from sqlalchemy.orm import sessionmaker
@@ -85,7 +86,7 @@ def gconnect():
         return response
 
     # Store the access token in the session for later use.
-    login_session['credentials'] = credentials
+    login_session['credentials'] = credentials.access_token
     login_session['gplus_id'] = gplus_id
 
     # Get user info
@@ -109,6 +110,39 @@ def gconnect():
     flash("you are now logged in as %s" % login_session['username'])
     print "done!"
     return output
+# Logout
+@app.route('/gdisconnect')
+def gdisconnect():
+        # Only disconnect a connected user.
+    credentials = login_session.get('credentials')
+    if credentials is None:
+        response = make_response(
+            json.dumps('Current user not connected.'), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    access_token = login_session.get('credentials')
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
+    h = httplib2.Http()
+    result = h.request(url, 'GET')[0]
+
+    if result['status'] == '200':
+        # Reset the user's sesson.
+        del login_session['credentials']
+        del login_session['gplus_id']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+
+        response = make_response(json.dumps('Successfully disconnected.'), 200)
+        response.headers['Content-Type'] = 'application/json'
+        flash('response')
+        return redirect(url_for('homePage'))
+    else:
+        # For whatever reason, the given token was invalid.
+        response = make_response(
+            json.dumps('Failed to revoke token for given user.', 400))
+        response.headers['Content-Type'] = 'application/json'
+        return response
 # Login View Route
 @app.route('/login')
 def showLogin():
@@ -121,13 +155,16 @@ def showLogin():
 @app.route('/home')
 def homePage():
 	# Get all categories for side cateogry menu
-    categories = session.query(Categories).all()
+	categories = session.query(Categories).all()
     # Grab a collection of items
-    items = session.query(Items).join(Categories, Items.category_id == Categories.id) \
-    							.order_by(Items.date_added.desc()).limit(5) \
-    							.values(Items.item_name, Categories.category_name)
-    
-    return render_template('home.html', categories = categories, items = items)
+	items = session.query(Items).join(Categories, Items.category_id == Categories.id) \
+									.order_by(Items.date_added.desc()).limit(5) \
+									.values(Items.item_name, Categories.category_name)
+	# Check to see if user logged in or not and return appropriate page
+	if 'username' not in login_session:
+		return render_template('public_home.html', categories = categories, items = items)
+	else:
+		return render_template('home.html', categories = categories, items = items)
 # Categories Route
 @app.route('/catalog/<string:category_name>/items/')
 def categoryItems(category_name):
@@ -141,8 +178,11 @@ def categoryItems(category_name):
     count = session.query(Items).join(Categories, Items.category_id == Categories.id) \
     							.filter(Categories.category_name == category_name) \
     							.count()
-    
-    return render_template('categories.html', categories = categories, items = items, itemCount = count, \
+    if 'username' not in login_session:
+		return render_template('public_categories.html', categories = categories, items = items, itemCount = count, \
+    					    categoryName = category_name)
+    else:
+		return render_template('categories.html', categories = categories, items = items, itemCount = count, \
     					    categoryName = category_name)
 # Item View Route
 @app.route('/catalog/<string:category_name>/<string:item_name>/')
@@ -155,12 +195,18 @@ def viewItem(category_name, item_name):
     									Items.item_name == item_name) \
     							.values(Items.item_name, Items.description, Categories.category_name)
 
-    
-    return render_template('items.html', categories = categories, items = items, \
+    if 'username' not in login_session:
+		return render_template('public_items.html', categories = categories, items = items, \
+    					    categoryName = category_name)
+    else:
+    	return render_template('items.html', categories = categories, items = items, \
     					    categoryName = category_name)
 # Item New Route
 @app.route('/catalog/<string:category_name>/new', methods=['GET', 'POST'])
 def newItem(category_name):
+	# Check to see if authenticated
+	if 'username' not in login_session:
+		return redirect('login')
 	# Do if form method is a post
 	if request.method == 'POST':
 		getCategoryid = session.query(Categories).filter(Categories.category_name == \
@@ -182,6 +228,9 @@ def newItem(category_name):
 # Item Edit Route
 @app.route('/catalog/<string:category_name>/<string:item_name>/edit', methods=['GET', 'POST'])
 def editItem(category_name, item_name):
+	# Check to see if authenticated
+	if 'username' not in login_session:
+		return redirect('login')
 	# Do if form method is a post
 	if request.method == 'POST':
 		newCategoryid = session.query(Categories).filter(Categories.category_name == \
@@ -215,6 +264,9 @@ def editItem(category_name, item_name):
 # Item Delete Route
 @app.route('/catalog/<string:category_name>/<string:item_name>/delete', methods=['GET', 'POST'])
 def deleteItem(category_name, item_name):
+	# Check to see if authenticated
+	if 'username' not in login_session:
+		return redirect('login')
 	# Do if form method is a post
 	if request.method == 'POST':
 		# Original cateogry id

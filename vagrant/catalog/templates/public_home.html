@@ -17,34 +17,28 @@
 	<nav class="navbar navbar-inverse navbar-fixed-top">
   		<div class="container">
   		  	 <a class="navbar-brand" href="{{url_for('homePage')}}">Catalog App</a>
-  		  	 <ul class="nav navbar-nav navbar-right">
-  		  	<li><p class="navbar-brand navbar-right"><span class="label label-info">Welcome! Your logged in.</span></p></li>
-  		  	<li><p class="btn btn-default navbar-btn navbar-right"><a href="{{ url_for('gdisconnect') }}">Logout</a></p></li>
-  		  </ul>
+  		  	<p class="btn btn-default navbar-btn navbar-right"><a href="{{ url_for('showLogin') }}">Sign In</a></p>
   		</div>
 	</nav>
-	<!-- Side Navbar -->
+	<!-- Side Navebar -->
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
         	<h3>Categories</h3>
           <ul class="nav nav-sidebar">
-          	<!-- Loop thorugh all categories and creat url -->
+          	<!-- Loop through categories and dynamically creat html url -->
 			{% for c in categories %}
 			<li><a href="{{ url_for('categoryItems',category_name = c.category_name) }}">{{ c.category_name }}</a></li>
 			{% endfor %}
           </ul>
         </div>
-        <!-- Loop through all items for a category and show a count of items for category -->
         <div class="container-fluid">
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 	 		<div class="panel-body">
-	 		<h2 class="page-header">{{categoryName}}</h2>
+			<h2 class="page-header">Latest Items</h2>
+			<!-- Loop through top 5 last added items and dynamically create url -->
 			{% for i in items %}
-			<h3>{{i.item_name}}</h3>
-			<h5>{{i.description}}</h5>
-			<p><a href="{{ url_for('editItem',category_name = i.category_name, item_name = i.item_name) }}">Edit</a></p>
-			<p><a href="{{ url_for('deleteItem',category_name = i.category_name, item_name = i.item_name) }}">Delete</a></p>
+			<h4><a href="{{ url_for('viewItem',category_name = i.category_name, item_name = i.item_name) }}">{{i.item_name}} </a> <span class="label label-success">{{i.category_name}}</span></h4>
 		</br>
 			{% endfor %}
 			</div>

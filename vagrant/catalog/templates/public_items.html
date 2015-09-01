@@ -17,10 +17,7 @@
 	<nav class="navbar navbar-inverse navbar-fixed-top">
   		<div class="container">
   		  	 <a class="navbar-brand" href="{{url_for('homePage')}}">Catalog App</a>
-  		  	 <ul class="nav navbar-nav navbar-right">
-  		  	<li><p class="navbar-brand navbar-right"><span class="label label-info">Welcome! Your logged in.</span></p></li>
-  		  	<li><p class="btn btn-default navbar-btn navbar-right"><a href="{{ url_for('gdisconnect') }}">Logout</a></p></li>
-  		  </ul>
+  		  	<p class="btn btn-default navbar-btn navbar-right"><a href="{{ url_for('showLogin') }}">Sign In</a></p>
   		</div>
 	</nav>
 	<!-- Side Navbar -->
@@ -43,8 +40,6 @@
 			{% for i in items %}
 			<h3>{{i.item_name}}</h3>
 			<h5>{{i.description}}</h5>
-			<p><a href="{{ url_for('editItem',category_name = i.category_name, item_name = i.item_name) }}">Edit</a></p>
-			<p><a href="{{ url_for('deleteItem',category_name = i.category_name, item_name = i.item_name) }}">Delete</a></p>
 		</br>
 			{% endfor %}
 			</div>
