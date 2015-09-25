@@ -42,5 +42,8 @@ session.add(newItem)
 newItem = Items(item_name = 'Star Wars Battlefront', description = 'Star Wars meet Battlefront',
 				 category_id = secondCategory.id)
 session.add(newItem)
+newItem = Items(item_name = 'Monopoly', description = 'Fun game of buying and selling properties',
+				 category_id = fourthCategory.id)
+session.add(newItem)
 # Commit changes to database
 session.commit()

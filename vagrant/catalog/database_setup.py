@@ -1,6 +1,7 @@
 # Create database
 # Author: Lucas Velasquez
 
+import os
 import sys
 import datetime
 # Import for mapper code
@@ -25,6 +26,15 @@ class Categories(Base):
 		String(200), nullable = False)
 	date_added = Column(
 		DateTime, default = datetime.datetime.now)
+# serializable format
+	@property
+	def serialize(self):
+
+		return {
+			'category_name': self.category_name,
+			'date_added': self.date_added,
+			'id': self.id,
+		}
 
 class Items(Base):
 	__tablename__ = 'items'
@@ -38,10 +48,18 @@ class Items(Base):
 		Integer, ForeignKey(Categories.id))
 	date_added = Column(
 		DateTime, default = datetime.datetime.now)
+# serializable format
+	@property
+	def serialize(self):
 
+		return {
+			'item_name': self.item_name,
+			'description': self.description,
+			'id': self.id,
+		}
 
 # Insert at end of file
 engine = create_engine(
-    'sqlite:///catalog.db')
+	'sqlite:///catalog.db')
 
 Base.metadata.create_all(engine)
