@@ -1,37 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-	    <meta charset="utf-8">
-	    <title>Catalog</title>
+<!-- Call master html layout page -->
+{% extends "layout_public.html" %}
 
-	    <!-- Bootstrap 3 -->
-	    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
-	    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
-	    <!-- Custom styles for this template -->
-   		<link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/dashboard.css') }}">
-	    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-	    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
-	</head>
-	<body>
-	<!-- Top Navbar -->
-	<nav class="navbar navbar-inverse navbar-fixed-top">
-  		<div class="container">
-  		  	 <a class="navbar-brand" href="{{url_for('homePage')}}">Catalog App</a>
-  		  	<p class="btn btn-default navbar-btn navbar-right"><a href="{{ url_for('showLogin') }}">Sign In</a></p>
-  		</div>
-	</nav>
-	<!-- Side Navbar -->
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-        	<h3>Categories</h3>
-          <ul class="nav nav-sidebar">
-          	<!-- Loop thorugh all categories and creat url -->
-			{% for c in categories %}
-			<li><a href="{{ url_for('categoryItems',category_name = c.category_name) }}">{{ c.category_name }}</a></li>
-			{% endfor %}
-          </ul>
-        </div>
+<!-- replace content block in layout page -->
+{% block content %}
         <!-- Loop through all items for a category and show a count of items for category -->
         <div class="container-fluid">
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
@@ -45,8 +16,5 @@
 			</div>
 		</div>
 	</div>
-	
-	
-	<body>
-
-</html>
+<!-- end content block -->
+{% endblock %}
